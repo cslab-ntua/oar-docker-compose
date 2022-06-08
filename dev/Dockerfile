@@ -43,8 +43,8 @@ RUN rm -f /lib/systemd/system/multi-user.target.wants/* \
 RUN echo "DefaultTimeoutStartSec=5s" >> /etc/systemd/system.conf \
     && echo "DefaultTimeoutStopSec=5s" >> /etc/systemd/system.conf
 
-RUN cp /common/create_resources.sh /etc/systemd/system
-RUN cp /common/nodes /etc/systemd/system
+#RUN cp /common/create_resources.sh /etc/systemd/system
+#RUN cp /common/nodes /etc/systemd/system
 RUN cp /common/oardocker-provision.service /etc/systemd/system/ \
     && systemctl enable oardocker-provision.service
 
