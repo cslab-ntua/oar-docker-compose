@@ -3,8 +3,8 @@
 ## How to use
 
 - Install [docker-compose](https://docs.docker.com/compose/install/).
-- Build the containers: `cd dev && docker-compose build`.
-- Start the containers: `docker-compose up`.
+- Modify the two variables `NODES` and `CPUS` in file `dev/.env_oar_provisoning.sh`, accordingly.
+- Start the containers: `docker-compose up --build --scale node=NODES`, where NODES is the value of variable from previous step.
 - Connect as user 1 to the frontend `docker exec -u user1 -ti dev_frontend_1 bash` (the name might be different on your commputer).
 - Now you can try to submit a job with `oarsub -I`.
 
@@ -82,9 +82,11 @@ http://localhost:8000/monika
 which displays gantt chart of nodes and jobs for the past and future \
 http://localhost:8000/drawgantt/
 
+
 - **pgADMIN** \
 which displays the PostgreSQL with GUI\
 http://localhost:5050 \
 Use \
 hostname: *server* \
 User, Password, DB: *oar*
+

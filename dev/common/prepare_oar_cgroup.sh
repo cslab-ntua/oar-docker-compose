@@ -31,7 +31,7 @@ if [ "$1" = "init" ]; then
     /bin/echo 0 > $OS_CGROUPS_PATH/cpuset/oardocker/$HOSTNAME/notify_on_release
     /bin/echo 1000 > $OS_CGROUPS_PATH/blkio/oardocker/$HOSTNAME/blkio.weight
 elif [ "$1" = "clean" ]; then
-    if [ "$HOSTNAME" = "node1" ]; then
+    #if [ "$HOSTNAME" = "node1" ]; then
         CGROOT="$OS_CGROUPS_PATH/cpuset/oardocker/"
 
         if ! [ -d $CGROOT ]; then
@@ -50,7 +50,7 @@ elif [ "$1" = "clean" ]; then
         find $CGROOT -depth -type d -exec rmdir {} \;
 
         echo "Cgroup is cleanded!"
-    fi
+    #fi
 fi
 
 exit 0

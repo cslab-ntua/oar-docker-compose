@@ -1,0 +1,15 @@
+[run]
+branch = True
+source = src
+parallel = true
+omit=
+	oar/cli/db/*
+	oar/kao/coorm.py
+	oar/tools/__init__.py
+	oar/cli/oar2trace.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
