@@ -19,7 +19,7 @@ TOOLS_INSTALL=""
 TOOLS_SETUP=""
 
 if (( VERSION_MAJOR==3 )); then
-    cd $SRCDIR && /root/.poetry/bin/poetry build
+    cd $SRCDIR && /root/.local/bin/poetry build
     pip3 install $SRCDIR/dist/*.whl
 else
     TOOLS_BUILD="tools-build"
@@ -77,6 +77,9 @@ sed -e "s/^\(password.*\)oar.*/\1oar_ro/" -i /etc/oar/monika.conf
 sed -e "s/^\(dbtype.*\)mysql.*/\1psql/" -i /etc/oar/monika.conf
 sed -e "s/^\(dbport.*\)3306.*/\15432/" -i /etc/oar/monika.conf
 sed -e "s/^\(hostname.*\)localhost.*/\1server/" -i /etc/oar/monika.conf
+# show each cpu per line
+cores=$(grep -e "^processor\s\+:" /proc/cpuinfo | sort -u | wc -l)
+sed -i "s/^max_cores_per_line = .*/max_cores_per_line = ${cores}/g" /etc/oar/monika.conf
 chown www-data /etc/oar/monika.conf
 
 sed -i "s/\$CONF\['db_type'\]=\"mysql\"/\$CONF\['db_type'\]=\"pg\"/" /etc/oar/drawgantt-config.inc.php

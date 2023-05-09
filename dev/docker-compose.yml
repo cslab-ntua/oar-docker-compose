@@ -12,6 +12,7 @@ services:
     volumes:
       - .:/srv
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - ./oar3/etc/oar/admission_rules.d:/etc/oar/admission_rules.d
     networks:
       - oar
 
@@ -32,11 +33,11 @@ services:
     volumes:
       - .:/srv
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - ./oar3/etc/oar/admission_rules.d:/etc/oar/admission_rules.d
     networks:
       - oar
 
-  node1:
-    hostname: node1
+  node:
     privileged: true
     build:
       context: .
@@ -48,22 +49,7 @@ services:
     volumes:
       - .:/srv
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    networks:
-      - oar
-
-  node2:
-    hostname: node2
-    privileged: true
-    build:
-      context: .
-      target: node
-    tmpfs:
-      - /tmp
-      - /run
-      - /run/lock
-    volumes:
-      - .:/srv
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - ./oar3/etc/oar/admission_rules.d:/etc/oar/admission_rules.d
     networks:
       - oar
 

@@ -12,7 +12,7 @@ fi
 : ''${AUTO_PROVISIONING=1}
 : ''${SRC:=""}
 : ''${FRONTEND_OAREXEC=false}
-: ''${MIXED_INSTALL=false}
+: ''${MIXED_INSTALL:=false}
 : ''${LIVE_RELOAD=false}
 : ''${TARBALL:="https://github.com/oar-team/oar3/archive/refs/heads/master.tar.gz"}
 
@@ -46,7 +46,7 @@ if [ ! -f /oar_provisioned ]; then
 
     if [ $MIXED_INSTALL = true ]; then
         echo "Provisioning mixed installation"
-        exec bash /common/provisioning_oar2_mixed.sh
+        exec bash /srv/common/provisioning_oar2_mixed.sh
         echo "fail exec"
         exit 1
     fi
@@ -109,8 +109,45 @@ if [ ! -f /oar_provisioned ]; then
         systemctl enable oar-server
         systemctl start oar-server
 
-        oarnodesetting -a -h node1
-        oarnodesetting -a -h node2
+        #source /etc/systemd/system/create_resources.sh
+        #create_resources_manually
+
+        oarproperty -a cpu || true
+        oarproperty -a core || true
+        oarproperty -c -a host || true
+        oarproperty -a mem || true
+
+        nodes=$NODES
+        cpus=$CPUS
+        cores=$(grep -e "^processor\s\+:" /proc/cpuinfo | sort -u | wc -l)
+        mem=$(grep -e "^MemTotal" /proc/meminfo | awk '{print $2}')
+        mem=$((mem / 1024 / 1024 + 1))
+
+        totalcores=$((cores*cpus*nodes))
+
+        node=0
+        cpu=0
+        node=0
+        for ((core=1;core<=$totalcores; core++)); do
+
+            if (((core-1)%(cpus*cores)==0)); then
+                node=$((node + 1))
+            fi
+
+            if (((core-1)%cores==0)); then
+                cpu=$((cpu + 1))
+            fi
+
+            echo $node $cpu $core $(((core-1)%cores)) >> $log
+            oarnodesetting -a -h "dev_node_"$node -p host="dev_node_"$node -p cpu=$cpu -p core=$core -p cpuset=$(((core-1)%cores)) -p mem=$mem &
+            wait
+        done
+
+        if [ ! -z $OAR_CONF ]; then
+            echo "install local conf ${OAR_CONF}"
+            cp /srv/${OAR_CONF} /etc/oar/oar.conf
+        fi
+
     elif [ "$role" == "node" ] || [[ $FRONTEND_OAREXEC = true && "$role" == "frontend" ]];
     then
         echo "Provision OAR Node for $role"
@@ -123,6 +160,11 @@ if [ ! -f /oar_provisioned ]; then
     then
         echo "Provisioning OAR Frontend" >> $log
         /srv/common/oar-frontend-install.sh $SRCDIR $VERSION_MAJOR >> $log || fail "oar-frontend-install exit $?"
+
+        if [ ! -z $OAR_CONF ]; then
+            echo "install local conf ${OAR_CONF}"
+            cp /srv/${OAR_CONF} /etc/oar/oar.conf
+        fi
     fi
 
     touch /oar_provisioned

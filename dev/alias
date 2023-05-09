@@ -1,0 +1,13 @@
+alias server='docker exec -it dev_server_1 bash'
+alias frontend='docker exec -u user1 -it dev_frontend_1 bash'
+
+alias submit4="docker exec -u user1 -it dev_frontend_1 bash -c 'oarsub -l /core=4 -t find=no_pref \"sleep 1m\"'"
+
+alias submit8="docker exec -u user1 -it dev_frontend_1 bash -c 'oarsub -l /core=8 -t find=no_pref \"sleep 1m\"'"
+
+alias submit16="docker exec -u user1 -it dev_frontend_1 bash -c 'oarsub -l /core=16 -t find=no_pref \"sleep 1m\"'"
+
+alias log="docker exec dev_server_1 bash -c 'tail -f /var/log/oar.log'"
+
+
+alias submit24="docker exec -u user1 -it dev_frontend_1 bash -c 'oarsub -l /core=24 -t find=spread \"sleep 1m\"'"
