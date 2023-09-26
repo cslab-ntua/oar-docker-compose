@@ -8,7 +8,7 @@ FRONTEND_OAREXEC=false
 LIVE_RELOAD=true
 
 # Test to override the default oar conf in the image
-#OAR_CONF="./oar3-test.conf"
+OAR_CONF="./common/oar3.conf"
 #SRC=oar2-src
 #TARBALL="https://github.com/oar-team/oar/archive/refs/heads/master.tar.gz"
 #TARBALL="https://github.com/oar-team/oar3/archive/refs/heads/master.tar.gz"

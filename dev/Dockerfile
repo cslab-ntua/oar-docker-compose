@@ -30,6 +30,8 @@ RUN chmod +x /common/*.sh
 # Get access to python
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
+RUN python3 -m pip install importlib_metadata
+
 RUN /common/create_users.sh && /common/generate_ssh_keys.sh
 
 RUN rm -f /lib/systemd/system/multi-user.target.wants/* \
